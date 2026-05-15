@@ -10,7 +10,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 9000
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 app.use(cors())
 app.use(express.json())
@@ -37,6 +37,15 @@ const run = async () => {
             const cursor = userCollection.find()
             const result = await cursor.toArray()
             res.send(result)
+        })
+        app.get('/users/:id', async (req, res) => {
+
+            const id = req.params.id
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const user = await userCollection.findOne(query)
+            res.send(user)
         })
 
         // Send a ping to confirm a successful connection
